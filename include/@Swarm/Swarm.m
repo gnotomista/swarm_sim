@@ -76,6 +76,12 @@ classdef Swarm < handle
             end
         end
         
+        function moveUnicycle(obj, v)
+            for i = 1 : obj.N
+                obj.robots{i}.moveUnicycle(v(:,i))
+            end
+        end
+        
         function goToPoints(obj, p, varargin)
             for i = 1 : obj.N
                 obj.robots{i}.goToPoint(p(:,i), varargin{:})
