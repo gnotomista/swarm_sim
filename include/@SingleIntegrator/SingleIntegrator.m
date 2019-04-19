@@ -3,7 +3,7 @@ classdef SingleIntegrator < handle
     properties
         DT
         W
-        VLINMAX
+        % VLINMAX
         x
         y
         hR
@@ -15,12 +15,12 @@ classdef SingleIntegrator < handle
             addParameter(ip, 'width', 1e-1)
             addParameter(ip, 'initialState', [0; 0])
             addParameter(ip, 'simulationTimeStep', 1e-1)
-            addParameter(ip, 'vLinMax', 1e6)
+            % addParameter(ip, 'vLinMax', 1e6)
             parse(ip,varargin{:})
 
             obj.W = ip.Results.width;
             obj.DT = ip.Results.simulationTimeStep;
-            obj.VLINMAX = ip.Results.vLinMax;
+            % obj.VLINMAX = ip.Results.vLinMax;
             obj.x = ip.Results.initialState(1);
             obj.y = ip.Results.initialState(2);
             

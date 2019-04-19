@@ -6,14 +6,14 @@ PLOT_GRAPH = true;
 R = @(t) [cos(t) -sin(t); sin(t) cos(t)];
 
 N = 20;
+DT = 0.01;
+T = 100;
 robots = cell(1,N);
 for i = 1 : N
     robots{i} = Unicycle('width',0.1,...
         'length',0.1,...
         'initialState',-2+4*rand(3,1),...
-        'simulationTimeStep',0.01,...
-        'vLinMax',10,...
-        'vAngMax',10);
+        'simulationTimeStep',DT);
 end
 th0 = pi/N;
 th = pi/N-th0;
@@ -25,7 +25,7 @@ s = Swarm('robots',robots,'L',L);
 
 s.plotFigure()
 
-for t = 1 : 1e4
+for t = 0 : DT : T
     tic
     
     q = s.getPoses();
@@ -40,10 +40,10 @@ for t = 1 : 1e4
     s.moveSingleIntegrators(u)
     
     if PLOT_GRAPH
-        s.plotGraph('Color',[0,0.145,0.298],'LineWidth',10)
+        s.plotGraph('Color',[0,0.145,0.298],'LineWidth',5)
     end
     s.plotRobots([0.933,0.698,0.067],'EdgeColor','none')
     
     drawnow limitrate
-    pause(s.robots{1}.DT-toc)
+    pause(DT-toc)
 end

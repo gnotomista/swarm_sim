@@ -76,7 +76,7 @@ classdef Swarm < handle
             end
         end
         
-        function moveUnicycle(obj, v)
+        function moveUnicycles(obj, v)
             for i = 1 : obj.N
                 obj.robots{i}.moveUnicycle(v(:,i))
             end
@@ -88,8 +88,13 @@ classdef Swarm < handle
             end
         end
         
-        function [G,A,VC] = coverageControlFast(obj)
-            P = [eye(2,3)*obj.getPoses() obj.mirrorRobotsAboutEnvironmentBoundary()];
+        function [G,A,VC] = coverageControl(obj,varargin)
+            if isempty(varargin)
+                p = eye(2,3)*obj.getPoses();
+            else
+                p = varargin{1};
+            end
+            P = [p obj.mirrorRobotsAboutEnvironmentBoundary(p)];
             [V,C] = voronoin(P');
             V(V==Inf) = 1e3*max(abs(obj.environment(:)));
             G = nan(2,obj.N);
@@ -235,12 +240,11 @@ classdef Swarm < handle
     end
     
     methods (Access = private)
-        function mirroredRobots = mirrorRobotsAboutEnvironmentBoundary(obj)
-            mirroredRobots = nan(2,obj.N*(size(obj.environment,2)-1));
-            for i = 1 : obj.N
+        function mirroredRobots = mirrorRobotsAboutEnvironmentBoundary(obj, p)
+            mirroredRobots = nan(2,size(p,2)*(size(obj.environment,2)-1));
+            for i = 1 : size(p,2)
+                point = p(:,i);
                 for j = 1 : size(obj.environment,2)-1
-                    pose = obj.robots{i}.getPose();
-                    point = pose(1:2,:);
                     pointWrtSide = (point - obj.environment(:,j));
                     side = obj.environment(:,j+1) - obj.environment(:,j);
                     lengthOfPProjectedOntoL = pointWrtSide' * side / norm(side)^2;

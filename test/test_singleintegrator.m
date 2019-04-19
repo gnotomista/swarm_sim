@@ -4,8 +4,7 @@ close all
 
 si = SingleIntegrator('width',0.1,...
     'initialState',[1;1],...
-    'simulationTimeStep',0.01,...
-    'vLinMax',0.1);
+    'simulationTimeStep',0.01);
 
 figure, hold on, axis equal, axis([-2 2 -2 2])
 

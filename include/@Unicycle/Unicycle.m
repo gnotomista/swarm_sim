@@ -4,8 +4,8 @@ classdef Unicycle < handle
         DT
         W
         L
-        VLINMAX
-        VANGMAX
+        % VLINMAX
+        % VANGMAX
         x
         y
         th
@@ -19,15 +19,15 @@ classdef Unicycle < handle
             addParameter(ip, 'length', 1e-2)
             addParameter(ip, 'initialState', [0; 0; 0])
             addParameter(ip, 'simulationTimeStep', 1e-1)
-            addParameter(ip, 'vLinMax', 1e6)
-            addParameter(ip, 'vAngMax', 1e3*2*pi)
+            % addParameter(ip, 'vLinMax', 1e6)
+            % addParameter(ip, 'vAngMax', 1e3*2*pi)
             parse(ip,varargin{:})
             
             obj.DT = ip.Results.simulationTimeStep;
             obj.W = ip.Results.width;
             obj.L = ip.Results.length;
-            obj.VLINMAX = ip.Results.vLinMax;
-            obj.VANGMAX = ip.Results.vAngMax;
+            % obj.VLINMAX = ip.Results.vLinMax;
+            % obj.VANGMAX = ip.Results.vAngMax;
             obj.x = ip.Results.initialState(1);
             obj.y = ip.Results.initialState(2);
             obj.th = ip.Results.initialState(3);

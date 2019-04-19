@@ -5,21 +5,21 @@ close all
 PLOT_GRAPH = true;
 
 N = 10;
+DT = 0.01;
+T = 1;
 robots = cell(1,N);
 for i = 1 : N
     robots{i} = Unicycle('width',0.1,...
         'length',0.1,...
         'initialState',[-0.5+1*rand(2,1); 2*pi*rand()],...
-        'simulationTimeStep',0.01,...
-        'vLinMax',10,...
-        'vAngMax',1);
+        'simulationTimeStep',DT);
 end
 
-s = Swarm('robots',robots,'L','cycle');
+s = Swarm('robots',robots,'L','complete');
 
 s.plotFigure()
 
-for t = 1 : 1e3
+for t = 0 : DT : T
     tic
     
     q = s.getPoses();
@@ -36,13 +36,13 @@ for t = 1 : 1e3
         u(2,i) = u(2,i) + 10 * (th_avg_neigh_i-q(3,i));
     end
     
-    s.moveUnicycle(u)
+    s.moveUnicycles(u)
     
     if PLOT_GRAPH
-        s.plotGraph('Color',[0,0.145,0.298],'LineWidth',10)
+        s.plotGraph('Color',[0,0.145,0.298],'LineWidth',5)
     end
     s.plotRobots([0.933,0.698,0.067],'EdgeColor','none')
     
     drawnow limitrate
-    pause(s.robots{1}.DT-toc)
+    pause(DT-toc)
 end

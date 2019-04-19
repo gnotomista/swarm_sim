@@ -5,8 +5,8 @@ close all
 PLOT_VORONOI = true;
 PLOT_CENTROID = true;
 PLOT_DENSITY = true;
-UNI_SI = 'uni';
-DENSITY = ''; % or 'uniform'
+UNI_SI = 'si'; % 'uni' or 'si'
+DENSITY = ''; % '' or 'uniform'
 
 N = 50;
 robots = cell(1,N);
@@ -15,21 +15,18 @@ for i = 1 : N
         robots{i} = Unicycle('width',0.1,...
             'length',0.1,...
             'initialState',[0.1;-0.3;0]+0.001*rand(3,1),...
-            'simulationTimeStep',0.01,...
-            'vLinMax',10,...
-            'vAngMax',1);
+            'simulationTimeStep',0.01);
     elseif strcmpi(UNI_SI,'si')
         robots{i} = SingleIntegrator('width',0.05,...
             'initialState',[0.1;-0.5;0]+0.001*rand(3,1),...
-            'simulationTimeStep',0.01,...
-            'vLinMax',10);
+            'simulationTimeStep',0.01);
     end
 end
 environment = [cos(linspace(0,2*pi,6)); sin(linspace(0,2*pi,6))];
 if strcmp(DENSITY, 'uniform')
     phi = 'uniform';
 else
-    phi = @(x,y) exp(-((x-0.2).^2+(y-0.3).^2)/0.06) + 0.5*exp(-((x+0.2).^2+(y+0.1).^2)/0.03);
+    phi = @(x,y) exp(-(x.^2+y.^2)/0.1);
 end
 
 s = Swarm('robots',robots,...
@@ -50,9 +47,9 @@ while true
     
     q = s.getPoses();
     
-    [G,A,VC] = s.coverageControlFast();
+    [G,A,VC] = s.coverageControl();
     
-    s.goToPoints(G,100);
+    s.goToPoints(G,100)
     
     if mod(n,1) == 0
         s.plotRobots([.2 .4 .6],'EdgeColor','none')
