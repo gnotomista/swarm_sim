@@ -91,16 +91,18 @@ classdef Swarm < handle
         function [G,A,VC] = coverageControl(obj,varargin)
             if isempty(varargin)
                 p = eye(2,3)*obj.getPoses();
+                Np = obj.N;
             else
                 p = varargin{1};
+                Np = size(p,2);
             end
             P = [p obj.mirrorRobotsAboutEnvironmentBoundary(p)];
             [V,C] = voronoin(P');
             V(V==Inf) = 1e3*max(abs(obj.environment(:)));
-            G = nan(2,obj.N);
-            A = nan(1,obj.N);
-            VC = cell(1,obj.N);
-            for i = 1 : obj.N
+            G = nan(2,Np);
+            A = nan(1,Np);
+            VC = cell(1,Np);
+            for i = 1 : Np
                 VC{i} = [V(C{i},1) V(C{i},2)]';
                 [Gi, Ai] = obj.centroid(VC{i});
                 G(:,i) = Gi;
