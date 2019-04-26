@@ -51,7 +51,7 @@ classdef Swarm < handle
                 end
             end
             obj.phi = ip.Results.densityFunction;
-            obj.hG = struct('figure',[],'graph',[],'env',[],'voronoiCells',[],'voronoiCentroids',[]);
+            obj.hG = struct('figure',[],'graph',[],'env',[],'density',[],'voronoiCells',[],'voronoiCentroids',[]);
         end
         
         function q = getPoses(obj)
@@ -197,7 +197,7 @@ classdef Swarm < handle
                 else
                     args = {linspace(min(z(:)),max(x(:)),10), 'LineWidth', 2};
                 end
-                contour(x, y, z, args{:})
+                [~, obj.hG.density] = contour(x, y, z, args{:});
                 obj.fillout(obj.environment(1,:),obj.environment(2,:),[min(obj.environment(1,:))-1 max(obj.environment(1,:))+1 min(obj.environment(2,:))-1 max(obj.environment(2,:))+1],0.94*[1 1 1]);
             end
         end
