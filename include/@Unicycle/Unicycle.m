@@ -39,6 +39,12 @@ classdef Unicycle < handle
             q = [obj.x; obj.y; obj.th];
         end
         
+        function setPose(obj, q)
+            obj.x = q(1);
+            obj.y = q(2);
+            obj.th = q(3);
+        end
+        
         function moveUnicycle(obj, vOmega)
             obj.x = obj.x + (vOmega(1)*cos(obj.th))*obj.DT;
             obj.y = obj.y + (vOmega(1)*sin(obj.th))*obj.DT;

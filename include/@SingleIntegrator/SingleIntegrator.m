@@ -31,6 +31,11 @@ classdef SingleIntegrator < handle
             q = [obj.x; obj.y];
         end
         
+        function setPose(obj, q)
+            obj.x = q(1);
+            obj.y = q(2);
+        end
+        
         function moveSingleIntegrator(obj, v)
             obj.x = obj.x + v(1)*obj.DT;
             obj.y = obj.y + v(2)*obj.DT;

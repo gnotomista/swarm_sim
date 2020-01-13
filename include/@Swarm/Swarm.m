@@ -51,7 +51,7 @@ classdef Swarm < handle
                 end
             end
             obj.phi = ip.Results.densityFunction;
-            obj.hG = struct('figure',[],'graph',[],'env',[],'density',[],'voronoiCells',[],'voronoiCentroids',[]);
+            obj.hG = struct('figure',[],'graph',[],'env',[],'density',[],'voronoiCells',[],'voronoiCentroids',[],'robots',[]);
         end
         
         function q = getPoses(obj)
@@ -68,6 +68,12 @@ classdef Swarm < handle
         function neighbors = getNeighbors(obj, idx)
             neighbors = find(obj.L(idx, :) ~= 0);
             neighbors = neighbors(neighbors~=idx);
+        end
+        
+        function setPoses(obj, q)
+            for i = 1 : obj.N
+                obj.robots{i}.setPose(q(:,i));
+            end
         end
         
         function moveSingleIntegrators(obj, v)
@@ -110,14 +116,16 @@ classdef Swarm < handle
             end
         end
         
-        function c = evaluateCoverageCost(obj, VC, varargin)
-            p = eye(2,3)*obj.getPoses();
+        function c = evaluateCoverageCost(obj, q, VC, varargin)
+            p = eye(2,3)*q;
             c = 0;
+            if ~isempty(varargin)
+                idx = varargin{1};
+                VC = {VC{idx}};
+            end
             for i = 1 : length(VC)
                 if isempty(varargin)
                     idx = i;
-                else
-                    idx = varargin{1};
                 end
                 P = VC{i};
                 xP = P(1,:);
@@ -151,6 +159,14 @@ classdef Swarm < handle
         function plotRobots(obj, varargin)
             for i = 1 : obj.N
                 obj.robots{i}.plotRobot(varargin{:})
+            end
+        end
+        
+        function plotRobotsFast(obj, q, varargin)
+            if isempty(obj.hG.robots)
+                obj.hG.robots = scatter(q(1,:), q(2,:), varargin{:});
+            else
+                set(obj.hG.robots, 'XData', q(1,:), 'YData', q(2,:));
             end
         end
         
