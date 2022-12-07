@@ -112,7 +112,7 @@ classdef Swarm < handle
                 VC{i} = [V(C{i},1) V(C{i},2)]';
                 [Gi, Ai] = obj.centroid(VC{i});
                 G(:,i) = Gi;
-                A(i) = Ai;
+                A(i) = abs(Ai);
             end
         end
         
@@ -207,11 +207,11 @@ classdef Swarm < handle
             if ~strcmp(obj.phi, 'uniform')
                 [x,y] = meshgrid(min(obj.environment(1,:)):0.01:max(obj.environment(1,:)), min(obj.environment(2,:)):0.01:max(obj.environment(2,:)));
                 z = obj.phi(x,y);
-                caxis([min(z(:)),max(x(:))])
+                caxis([min(z(:)),max(z(:))])
                 if ~isempty(varargin)
                     args = varargin;
                 else
-                    args = {linspace(min(z(:)),max(x(:)),10), 'LineWidth', 2};
+                    args = {linspace(min(z(:)),max(z(:)),10), 'LineWidth', 2};
                 end
                 [~, obj.hG.density] = contour(x, y, z, args{:});
                 obj.fillout(obj.environment(1,:),obj.environment(2,:),[min(obj.environment(1,:))-1 max(obj.environment(1,:))+1 min(obj.environment(2,:))-1 max(obj.environment(2,:))+1],0.94*[1 1 1]);
@@ -296,9 +296,9 @@ classdef Swarm < handle
             else
                 xP = P(1,:);
                 yP = P(2,:);
-                phiA = @(x,y) (obj.phi(x,y));
-                phiSx = @(x,y) (x.*obj.phi(x,y));
-                phiSy = @(x,y) (y.*obj.phi(x,y));
+                phiA = @(x,y) max(eps,obj.phi(x,y));
+                phiSx = @(x,y) x.*max(eps,obj.phi(x,y));
+                phiSy = @(x,y) y.*max(eps,obj.phi(x,y));
                 trngltn = delaunay(xP, yP);
                 A = 0;
                 S = 0;
